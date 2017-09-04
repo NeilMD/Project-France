@@ -55,3 +55,5 @@ $route['translate_uri_dashes'] = FALSE;
 $route['customer'] = 'Customer/customer';
 $route['customer/addCustomer'] = 'Customer/customer/addCustomer';
 $route['customer/deleteCustomer'] = 'Customer/customer/deleteCustomer';
+$route['customer/getCustomer'] = 'Customer/customer/getCustomer';
+$route['customer/editCustomer'] = 'Customer/customer/editCustomer';

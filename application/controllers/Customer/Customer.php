@@ -40,7 +40,7 @@ class Customer extends CI_Controller {
 
 	//Add Customer 
 	public function addCustomer(){
-		//LOADS DB
+		//LOAD DB
 		$this->load->model('Customer/customerModel', 'customer'); 
 		//Data to be Added
 		$data = array(
@@ -50,15 +50,38 @@ class Customer extends CI_Controller {
 			'phone' => $this->input->post('number'),
 			'nationality' => $this->input->post('nationality')
 		);
-		
+		// print_r($data);
 		echo $this->customer->insert($data);
 		
 	}
 
 	public function deleteCustomer(){
-		//LOADS DB
+		//LOAD DB
 		$this->load->model('Customer/customerModel', 'customer'); 
 
 		echo $this->customer->delete($this->input->post('id'));
+	}
+
+	public function getCustomer(){
+		//LOAD DB
+		$this->load->model('Customer/customerModel', 'customer'); 		
+
+		echo json_encode($this->customer->getCustomer($this->input->post('id')),true);
+
+	}
+	public function editCustomer(){
+		//LOAD DB
+		$this->load->model('Customer/customerModel', 'customer'); 		
+
+		$data = array(
+			'email' => $this->input->post('email'),
+			'firstName' => $this->input->post('name'),
+			// 'firstName' => $this->input->post('name'),
+			'phone' => $this->input->post('number'),
+			'nationality' => $this->input->post('nationality')			
+		);
+
+		echo $this->customer->update($data, $this->input->post('id'));
+
 	}
 }

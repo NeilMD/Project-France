@@ -550,9 +550,9 @@
 								<?php foreach ($customer as $key): ?>
 									<tr>
 										<td ><?php echo $key['customerID'];?></td>
-										<td><?php if(isset($key['name'])) echo $key['name'];?></td>
+										<td><?php if(isset($key['firstName'])) echo $key['firstName'];?></td>
 										<td><?php if(isset($key['email'])) echo $key['email'];?></td>
-										<td><?php if(isset($key['number'])) echo $key['number'];?></td>
+										<td><?php if(isset($key['phone'])) echo $key['phone'];?></td>
 										<td><?php if(isset($key['nationality'])) echo $key['nationality'];?></td>
 
 										<td >
@@ -603,7 +603,7 @@
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">Add</h4>
+					<h4 id="header-mod" class="modal-title">Add</h4>
 				</div>
 				<div class="modal-body">
 					<div class="box-body">
@@ -639,7 +639,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-
+				<button type="button" style="display:none" id="save-edit-button" class="btn btn-primary">Save</button>
 					<button type="button" id="save-button" class="btn btn-primary">Save</button>
 				</div>
 			</div>
@@ -688,6 +688,13 @@
 		{
 			text: 'Add Customer',
 			action: function ( e, dt, node, config ) {
+				$('#header-mod').text('Add');
+				$("#save-edit-button").css('display','none');
+				$("#save-button").css('display','');
+				$("#add-name").val('');
+				$("#add-email").val('');
+				$("#add-number").val('');
+				$("#add-nationality").val('India').trigger('change');
 				$('#modal-default').modal('show');
 			}
 		}
@@ -701,8 +708,35 @@
 
 	});
 
-	$(".edit").on('click',function(){
+	var currRow;
 
+	$("#example2 tbody").on('click','tr td span.edit',function(){	
+		currRow = $(this).closest('tr');
+		var id = $(this).closest('tr').find('td:first').text();
+		$('#header-mod').text('Edit');
+		$("#save-edit-button").css('display','');
+		$("#save-button").css('display','none');
+		$.ajax({
+			type:'POST',
+			url:'<?php echo base_url();?>index.php/customer/getCustomer',
+			data:{id : id},
+			success:function(data){
+				data  = JSON.parse(data);
+				// console.log(data);
+				// console.log("EDIT");
+				// console.log(data[0].firstName);
+				
+				$("#add-name").val(data[0].firstName);
+				$("#add-email").val(data[0].email);
+				$("#add-number").val(data[0].phone);
+				$("#add-nationality").val(data[0].nationality).trigger("change");
+				$("#save-edit-button").attr('data-id',data[0].customerID);
+				$('#modal-default').modal('show');
+
+				
+
+			}
+		});
 	});
 	console.log("Neil");
 	$("#example2 tbody").on('click','tr td span.delete-row',function(){	
@@ -714,11 +748,12 @@
 			data: {id:id},
 			success:function(data){
 				if(data > 0 ){
-					tr.remove();
+					dt.row(tr).remove().draw();
 					alert('Success!');	
 				}else{
 					alert('Failed!');
 				}
+
 				
 			}
 		});
@@ -727,7 +762,7 @@
 
 	var actionButton =  '<span data-toggle="tooltip" title="View More" class="fa fa-book view"></span>'+
 	'<span data-toggle="tooltip" title="Edit" class="fa fa-edit edit"></span>'+
-	'<span data-toggle="tooltip" title="Delete"   class="fa fa-close delete"></span>';
+	'<span data-toggle="tooltip" title="Delete"   class="fa fa-close delete-row"></span>';
 
 	$("#save-button").click(function(){
 		$.ajax({
@@ -770,7 +805,53 @@
 			}
 		});
 	});
+	$("#save-edit-button").click(function(){
+		var id = $(this).attr('data-id');
+		$.ajax({
+			type:'POST',
+			url:'<?php echo base_url();?>index.php/customer/editCustomer',
+			data:{
+				name: $("#add-name").val(),
+				email: $("#add-email").val(),
+				number: $("#add-number").val(),
+				nationality: $("#add-nationality").val(),
+				id : id
+			},
+			success:function(data){
+				console.log("DATA EDIT");
+				console.log(data);
+				var name = $("#add-name").val();
+				var email = $("#add-email").val();
+				var number = $("#add-number").val();
+				var nationality = $("#add-nationality").val();
+				
 
+				
+
+				$('#modal-default').modal('hide');
+				if(parseInt(data) > 0){
+					var ctr = 0;
+					currRow.find('td').each(function(){
+						if(ctr == 1){
+							$(this).text(name);
+						}else if(ctr == 2){
+							$(this).text(email);
+						}else if(ctr == 3){
+							$(this).text(number);
+						}else if(ctr == 4){
+							$(this).text(Nationality);
+						}
+						ctr++;
+					});
+					
+
+				}else{
+					alert('Failed!');
+				}
+
+			}
+		});
+	});
 
 </script>
 </body>
