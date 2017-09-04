@@ -702,7 +702,7 @@
 
 	});
 
-	$("table tbody tr").on('click','td span.delete-row',function(){	
+	$("#example2").on('click','.delete-row',function(){	
 		var id = $(this).closest('tr').find('td:first').text();
 		$.ajax({
 			type:'POST',
