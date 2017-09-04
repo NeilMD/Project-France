@@ -54,4 +54,11 @@ class Customer extends CI_Controller {
 		echo $this->customer->insert($data);
 		
 	}
+
+	public function deleteCustomer(){
+		//LOADS DB
+		$this->load->model('Customer/customerModel', 'customer'); 
+
+		echo $this->customer->delete($this->input->post('id'));
+	}
 }

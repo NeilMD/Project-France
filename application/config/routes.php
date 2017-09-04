@@ -53,5 +53,5 @@ $route['default_controller'] = 'welcome';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 $route['customer'] = 'Customer/customer';
-$route['customer/addCustomer'] = 'Customer/customer/AddCustomer';
-$route['customer/deleteCustomer'] = 'Customer/customer/AddCustomer';
+$route['customer/addCustomer'] = 'Customer/customer/addCustomer';
+$route['customer/deleteCustomer'] = 'Customer/customer/deleteCustomer';

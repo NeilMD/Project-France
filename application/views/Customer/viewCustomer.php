@@ -694,6 +694,9 @@
 		]
 	});
 
+	
+
+	
 	$(".view").on('click',function(){
 
 	});
@@ -701,20 +704,26 @@
 	$(".edit").on('click',function(){
 
 	});
-
-	$("#example2").on('click','.delete-row',function(){	
+	console.log("Neil");
+	$("#example2 tbody").on('click','tr td span.delete-row',function(){	
 		var id = $(this).closest('tr').find('td:first').text();
+		var tr = $(this).closest('tr');
 		$.ajax({
 			type:'POST',
 			url:'<?php echo base_url();?>index.php/customer/deleteCustomer',
-			data:{id : id},
+			data: {id:id},
 			success:function(data){
-
+				if(data > 0 ){
+					tr.remove();
+					alert('Success!');	
+				}else{
+					alert('Failed!');
+				}
+				
 			}
 		});
 	});
-
-
+	
 
 	var actionButton =  '<span data-toggle="tooltip" title="View More" class="fa fa-book view"></span>'+
 	'<span data-toggle="tooltip" title="Edit" class="fa fa-edit edit"></span>'+
